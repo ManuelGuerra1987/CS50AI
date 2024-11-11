@@ -92,8 +92,37 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    queue = []  
+    explored = set() 
+
+    movie_person_pairs = neighbors_for_person(source)
+
+    
+    for movie_person_pair in movie_person_pairs:
+        queue.append([movie_person_pair])  
+
+    while queue:
+       
+        current_path = queue.pop(0)
+        movie_person_pair = current_path[-1]  
+
+        if movie_person_pair[1] == target:
+            return current_path
+
+    
+        person_id = movie_person_pair[1]
+        if person_id not in explored:
+            explored.add(person_id)
+
+            new_movie_person_pairs = neighbors_for_person(person_id)
+
+            for new_movie_person_pair in new_movie_person_pairs:
+                new_path = current_path + [new_movie_person_pair]  
+                queue.append(new_path)
+
+    return None 
+   
+
 
 
 def person_id_for_name(name):
