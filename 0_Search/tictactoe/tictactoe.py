@@ -19,17 +19,36 @@ def initial_state():
 
 
 def player(board):
-    """
-    Returns player who has the next turn on a board.
-    """
-    raise NotImplementedError
+
+    counter_x = 0
+    counter_o = 0
+
+    for i in range(3):
+        for j in range(3):
+
+            if board[i][j] == "X":
+                counter_x += 1
+            if board[i][j] == "O":    
+                counter_o += 1
+
+    if counter_x <= counter_o:
+        return X  
+    else:
+        return O    
+ 
 
 
 def actions(board):
-    """
-    Returns set of all possible actions (i, j) available on the board.
-    """
-    raise NotImplementedError
+
+    actions_set = set()
+
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == EMPTY:
+                actions_set.add((i,j))
+
+    return actions_set            
+    
 
 
 def result(board, action):
