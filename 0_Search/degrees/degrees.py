@@ -85,42 +85,38 @@ def main():
 
 
 def shortest_path(source, target):
-    """
-    Returns the shortest list of (movie_id, person_id) pairs
-    that connect the source to the target.
 
-    If no possible path, returns None.
-    """
+    if source == target:
+        return []
 
-    queue = []  
-    explored = set() 
+    visited = []
+    queue = []
 
     movie_person_pairs = neighbors_for_person(source)
 
-    
     for movie_person_pair in movie_person_pairs:
-        queue.append([movie_person_pair])  
+        queue.append([movie_person_pair])
 
     while queue:
-       
-        current_path = queue.pop(0)
-        movie_person_pair = current_path[-1]  
 
-        if movie_person_pair[1] == target:
-            return current_path
+        curr_path = queue.pop(0)  
+        pair = curr_path[-1]
+        person_id = pair[1]
 
-    
-        person_id = movie_person_pair[1]
-        if person_id not in explored:
-            explored.add(person_id)
+        if target == person_id:
+            return curr_path
+        
+        if person_id not in visited:
+            visited.append(person_id)
 
             new_movie_person_pairs = neighbors_for_person(person_id)
 
             for new_movie_person_pair in new_movie_person_pairs:
-                new_path = current_path + [new_movie_person_pair]  
+
+                new_path = curr_path + [new_movie_person_pair]
                 queue.append(new_path)
 
-    return None 
+    return None
    
 
 
