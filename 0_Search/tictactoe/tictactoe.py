@@ -52,10 +52,29 @@ def actions(board):
 
 
 def result(board, action):
-    """
-    Returns the board that results from making move (i, j) on the board.
-    """
-    raise NotImplementedError
+
+    row, col = action
+
+    if (row or col) not in [0,1,2]:
+
+        raise Exception
+    if board[row][col] != EMPTY:
+        raise Exception
+    
+    player_turn = player(board)
+
+    board_copy = [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]]
+    
+    for i in range(3):
+        for j in range(3):
+            board_copy[i][j] = board[i][j]
+
+
+    board_copy[row][col] = player_turn
+
+    return board_copy
 
 
 def winner(board):
