@@ -78,10 +78,56 @@ def result(board, action):
 
 
 def winner(board):
-    """
-    Returns the winner of the game, if there is one.
-    """
-    raise NotImplementedError
+
+    if board[0][0] == board[0][1] == board[0][2]:
+        if board[0][0] == "X":
+            return "X"
+        elif board[0][0] == "O":
+            return "O"
+
+    if board[1][0] == board[1][1] == board[1][2]:
+        if board[1][0] == "X":
+            return "X"
+        elif board[1][0] == "O":
+            return "O"    
+
+    if board[2][0] == board[2][1] == board[2][2]:
+        if board[2][0] == "X":
+            return "X"
+        elif board[2][0] == "O":
+            return "O"  
+        
+    if board[0][0] == board[1][0] == board[2][0]:
+        if board[0][0] == "X":
+            return "X"
+        elif board[0][0] == "O":
+            return "O"    
+
+    if board[0][1] == board[1][1] == board[2][1]:
+        if board[0][1] == "X":
+            return "X"
+        elif board[0][1] == "O":
+            return "O"  
+
+    if board[0][2] == board[1][2] == board[2][2]:
+        if board[0][2] == "X":
+            return "X"
+        elif board[0][2] == "O":
+            return "O"  
+
+    if board[0][0] == board[1][1] == board[2][2]:
+        if board[0][0] == "X":
+            return "X"
+        elif board[0][0] == "O":
+            return "O"   
+
+    if board[0][2] == board[1][1] == board[2][0]:
+        if board[0][2] == "X":
+            return "X"
+        elif board[0][2] == "O":
+            return "O"                                         
+    
+    return None
 
 
 def terminal(board):
