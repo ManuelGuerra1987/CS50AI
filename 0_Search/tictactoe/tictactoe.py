@@ -32,9 +32,9 @@ def player(board):
                 counter_o += 1
 
     if counter_x <= counter_o:
-        return X  
+        return "X" 
     else:
-        return O    
+        return "O"    
  
 
 
@@ -130,6 +130,7 @@ def winner(board):
     return None
 
 
+
 def terminal(board):
     """
     Returns True if game is over, False otherwise.
@@ -168,9 +169,69 @@ def utility(board):
         return -1
     else:
         return 0
+    
+
+def max_value(board):
+
+    if terminal(board):
+        return utility(board)
+
+    v = -99999
+
+    for action in actions(board):
+
+        v = max(v, min_value(result(board,action)))
+
+    return v    
+
+def min_value(board):
+
+    if terminal(board):
+        return utility(board)
+
+    v = 99999
+
+    for action in actions(board):
+
+        v = min(v, max_value(result(board,action)))
+
+    return v  
+
 
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    
+    if terminal(board):
+        return None
+
+    player_turn = player(board)
+
+    if player_turn == "X":
+
+        highest_value = -99999
+        pick_action = None
+        for action in actions(board):
+
+            if min_value(result(board,action)) > highest_value:
+                highest_value = min_value(result(board,action))
+                pick_action = action
+
+        return pick_action   
+
+    
+    if player_turn == "O":
+
+        smallest_value = 99999
+        pick_action = None
+        for action in actions(board):
+
+            if max_value(result(board,action)) < smallest_value:
+                smallest_value = max_value(result(board,action))
+                pick_action = action
+
+        return pick_action       
+
+
+
