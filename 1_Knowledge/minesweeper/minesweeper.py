@@ -203,48 +203,9 @@ class MinesweeperAI():
             if cell not in self.mines and cell not in self.safes:
                 filtered_cells.add(cell)
         return filtered_cells
-            
+    
+    def update_kb(self):
 
-    def add_knowledge(self, cell, count):
-        """
-        Called when the Minesweeper board tells us, for a given
-        safe cell, how many neighboring cells have mines in them.
-
-        This function should:
-            1) mark the cell as a move that has been made
-            2) mark the cell as safe
-            3) add a new sentence to the AI's knowledge base
-               based on the value of `cell` and `count`
-            4) mark any additional cells as safe or as mines
-               if it can be concluded based on the AI's knowledge base
-            5) add any new sentences to the AI's knowledge base
-               if they can be inferred from existing knowledge
-        """
-        # mark the cell as a move that has been made
-        if cell not in self.moves_made:
-            self.moves_made.add(cell)
-
-        # mark the cell as safe
-        if cell not in self.safes:
-            self.mark_safe(cell)  
-
-        # Add a new sentence to the AI's knowledge
-        neighbors = self.get_neighbors(cell)
-        filtered_neighbors = self.check_safes_and_mines(neighbors)
-        new_sentence = Sentence(filtered_neighbors,count)
-
-        if count == 0:
-            for cell in filtered_neighbors:
-                self.mark_safe(cell)
-
-        elif len(filtered_neighbors) == count:
-            for cell in filtered_neighbors:
-                self.mark_mine(cell)
-
-        else:
-            self.knowledge.append(new_sentence) 
-
-        # add any new sentences to the AI's knowledge base
         changes_made = True
         while changes_made:
             changes_made = False   
@@ -279,7 +240,52 @@ class MinesweeperAI():
                         # Agregar nueva sentencia si no está en el conocimiento
                         if inferred_sentence not in self.knowledge:
                             self.knowledge.append(inferred_sentence)
-                            changes_made = True                                                 
+                            changes_made = True 
+            
+
+    def add_knowledge(self, cell, count):
+        """
+        Called when the Minesweeper board tells us, for a given
+        safe cell, how many neighboring cells have mines in them.
+
+        This function should:
+            1) mark the cell as a move that has been made
+            2) mark the cell as safe
+            3) add a new sentence to the AI's knowledge base
+               based on the value of `cell` and `count`
+            4) mark any additional cells as safe or as mines
+               if it can be concluded based on the AI's knowledge base
+            5) add any new sentences to the AI's knowledge base
+               if they can be inferred from existing knowledge
+        """
+        # mark the cell as a move that has been made
+        if cell not in self.moves_made:
+            self.moves_made.add(cell)
+
+        # mark the cell as safe
+        if cell not in self.safes:
+            self.mark_safe(cell)  
+
+        # Add a new sentence to the AI's knowledge
+        neighbors = self.get_neighbors(cell)
+        filtered_neighbors = self.check_safes_and_mines(neighbors)
+        new_sentence = Sentence(filtered_neighbors,count)
+
+        if count == 0:
+            for cell in filtered_neighbors:
+                self.mark_safe(cell)
+                self.update_kb()
+
+        elif len(filtered_neighbors) == count:
+            for cell in filtered_neighbors:
+                self.mark_mine(cell)
+                self.update_kb()
+
+        else:
+            self.knowledge.append(new_sentence) 
+            self.update_kb()
+
+                                               
 
     def make_safe_move(self):
         """
