@@ -139,7 +139,36 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    raise NotImplementedError
+    prob = 1
+
+    for key,value in people.items():
+
+        if value["mother"] == None and value["father"] == None:
+
+            temp_prob = 1
+            temp_prob2 =1
+            if key in one_gene:
+                temp_prob *= PROBS["gene"][1]
+                num_gens = 1
+            elif key in two_genes:
+                temp_prob *= PROBS["gene"][2] 
+                num_gens = 2
+            else:
+                temp_prob *= PROBS["gene"][0]   
+                num_gens = 0
+
+            if key in have_trait:
+                temp_prob2 *= PROBS["trait"][num_gens][True]
+            else:
+                temp_prob2 *= PROBS["trait"][num_gens][False]
+
+            prob = prob * temp_prob * temp_prob2   
+
+        else:
+            if key in one_gene:
+                pass   
+
+
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
