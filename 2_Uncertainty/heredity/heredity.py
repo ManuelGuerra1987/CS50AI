@@ -129,16 +129,7 @@ def powerset(s):
 
 
 def joint_probability(people, one_gene, two_genes, have_trait):
-    """
-    Compute and return a joint probability.
 
-    The probability returned should be the probability that
-        * everyone in set `one_gene` has one copy of the gene, and
-        * everyone in set `two_genes` has two copies of the gene, and
-        * everyone not in `one_gene` or `two_gene` does not have the gene, and
-        * everyone in set `have_trait` has the trait, and
-        * everyone not in set` have_trait` does not have the trait.
-    """
     prob = 1
 
     for key,value in people.items():
@@ -146,7 +137,8 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         if value["mother"] == None and value["father"] == None:
 
             temp_prob = 1
-            temp_prob2 =1
+            temp_prob2 = 1
+
             if key in one_gene:
                 temp_prob *= PROBS["gene"][1]
                 num_gens = 1
@@ -165,8 +157,128 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             prob = prob * temp_prob * temp_prob2   
 
         else:
+
+            if value["mother"] in one_gene:
+                number_genes_mother = 1
+            elif value["mother"] in two_genes:
+                number_genes_mother = 2
+            else:
+                number_genes_mother = 0
+
+            if value["father"] in one_gene:
+                number_genes_father = 1
+            elif value["father"] in two_genes:
+                number_genes_father = 2
+            else:
+                number_genes_father = 0  
+
             if key in one_gene:
-                pass   
+  
+                #case gets the gene from his mother and not his father   
+                if number_genes_mother == 0:
+                    temp_prob3 = PROBS["mutation"]   
+                elif number_genes_mother == 2:
+                    temp_prob3 = 1 - PROBS["mutation"]
+                elif number_genes_mother == 1:
+                    temp_prob3 = 0.5 
+
+                if number_genes_father == 0:
+                    temp_prob4 = 1 - PROBS["mutation"]   
+                elif number_genes_father == 2:
+                    temp_prob4 = PROBS["mutation"]
+                elif number_genes_father == 1:
+                    temp_prob4 = 0.5 
+
+                #case gets the gene from his father and not his mother                                                       
+
+                if number_genes_father == 0:
+                    temp_prob5 = PROBS["mutation"]   
+                elif number_genes_father == 2:
+                    temp_prob5 = 1 - PROBS["mutation"]
+                elif number_genes_father == 1:
+                    temp_prob5 = 0.5    
+
+                if number_genes_mother == 0:
+                    temp_prob6 = 1 - PROBS["mutation"]   
+                elif number_genes_mother == 2:
+                    temp_prob6 = PROBS["mutation"]
+                elif number_genes_mother == 1:
+                    temp_prob6 = 0.5 
+
+                prob_one_gene = (temp_prob3 * temp_prob4) + (temp_prob5*temp_prob6)
+
+
+                if key in have_trait:
+
+                    temp_prob_trait = PROBS["trait"][1][True]    
+
+                else:
+
+                    temp_prob_trait = PROBS["trait"][1][False]  
+
+                prob *= prob_one_gene * temp_prob_trait
+
+
+            elif key not in one_gene and key not in two_genes:  
+
+                #case not gets the gene from  his father
+                if number_genes_father == 0:
+                    temp_prob7 = 1 - PROBS["mutation"]   
+                elif number_genes_father == 2:
+                    temp_prob7 = PROBS["mutation"]
+                elif number_genes_father == 1:
+                    temp_prob7 = 0.5   
+
+                #case not gets the gene from  his mother    
+                if number_genes_mother == 0:
+                    temp_prob8 = 1 - PROBS["mutation"]   
+                elif number_genes_mother == 2:
+                    temp_prob8 = PROBS["mutation"]
+                elif number_genes_mother == 1:
+                    temp_prob8 = 0.5    
+
+                if key in have_trait:
+
+                    temp_prob_trait = PROBS["trait"][0][True]    
+
+                else:
+
+                    temp_prob_trait = PROBS["trait"][0][False]  
+
+                prob *= temp_prob7 * temp_prob8 * temp_prob_trait   
+
+
+            if key in two_genes: 
+
+                #case gets the gene from his mother    
+                if number_genes_mother == 0:
+                    temp_prob9 = PROBS["mutation"]   
+                elif number_genes_mother == 2:
+                    temp_prob9 = 1 - PROBS["mutation"]
+                elif number_genes_mother == 1:
+                    temp_prob9 = 0.5 
+
+                #case gets the gene from his father                                                        
+
+                if number_genes_father == 0:
+                    temp_prob10 = PROBS["mutation"]   
+                elif number_genes_father == 2:
+                    temp_prob10 = 1 - PROBS["mutation"]
+                elif number_genes_father == 1:
+                    temp_prob10 = 0.5 
+
+                if key in have_trait:
+
+                    temp_prob_trait = PROBS["trait"][2][True]    
+
+                else:
+
+                    temp_prob_trait = PROBS["trait"][2][False]  
+
+                prob *= temp_prob9 * temp_prob10 * temp_prob_trait                                                                        
+
+
+    return prob 
 
 
 
