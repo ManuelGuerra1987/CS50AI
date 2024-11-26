@@ -33,7 +33,7 @@ def main():
 
 def load_data(filename):
 
-    with open("shopping.csv") as f:
+    with open(filename) as f:
 
         reader = csv.reader(f)
 
