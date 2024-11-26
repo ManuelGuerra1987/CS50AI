@@ -147,7 +147,43 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    sensitivity_dict = {}
+
+    for i in range(len(labels)):
+
+        sensitivity_dict[f"{i}"] = [labels[i],predictions[i]]
+
+    identified_counter = 0
+    actual_positive_counter = 0
+    for key,value in sensitivity_dict.items():
+
+        if value[0] == 1 and  value[1] == 1:
+            identified_counter +=1
+
+        if value[0] == 1:
+            actual_positive_counter +=1    
+
+    sensitivity = float(identified_counter/actual_positive_counter)    
+
+    specificity_dict = {}
+
+    for i in range(len(labels)):
+
+        specificity_dict[f"{i}"] = [labels[i],predictions[i]]
+
+    identified_counter = 0
+    actual_negative_counter = 0
+    for key,value in specificity_dict.items():
+
+        if value[0] == 0 and  value[1] == 0:
+            identified_counter +=1
+
+        if value[0] == 0:
+            actual_negative_counter +=1    
+
+    specificity = float(identified_counter/actual_negative_counter)     
+
+    return (sensitivity,specificity)
 
 
 if __name__ == "__main__":
