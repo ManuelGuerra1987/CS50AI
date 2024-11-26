@@ -32,34 +32,92 @@ def main():
 
 
 def load_data(filename):
-    """
-    Load shopping data from a CSV file `filename` and convert into a list of
-    evidence lists and a list of labels. Return a tuple (evidence, labels).
 
-    evidence should be a list of lists, where each list contains the
-    following values, in order:
-        - Administrative, an integer
-        - Administrative_Duration, a floating point number
-        - Informational, an integer
-        - Informational_Duration, a floating point number
-        - ProductRelated, an integer
-        - ProductRelated_Duration, a floating point number
-        - BounceRates, a floating point number
-        - ExitRates, a floating point number
-        - PageValues, a floating point number
-        - SpecialDay, a floating point number
-        - Month, an index from 0 (January) to 11 (December)
-        - OperatingSystems, an integer
-        - Browser, an integer
-        - Region, an integer
-        - TrafficType, an integer
-        - VisitorType, an integer 0 (not returning) or 1 (returning)
-        - Weekend, an integer 0 (if false) or 1 (if true)
+    with open("shopping.csv") as f:
 
-    labels should be the corresponding list of labels, where each label
-    is 1 if Revenue is true, and 0 otherwise.
+        reader = csv.reader(f)
+
+        data = []
+
+        for row in reader:
+
+            data.append(row)
+
+    """        
+
+    [['Administrative', 'Administrative_Duration', 'Informational', 'Informational_Duration', 'ProductRelated', 'ProductRelated_Duration', 'BounceRates', 'ExitRates', 'PageValues', 'SpecialDay', 'Month', 'OperatingSystems', 'Browser', 'Region', 'TrafficType', 'VisitorType', 'Weekend', 'Revenue'], ['0', '0', '0', 
+    '0', '1', '0', '0.2', '0.2', '0', '0', 'Feb', '1', '1', '1', '1', 'Returning_Visitor', 'FALSE', 'FALSE'], ['0', '0', '0', '0', '2', '64', '0', '0.1', '0', 
+    '0', 'Feb', '2', '2', '1', '2', 'Returning_Visitor', 'FALSE', 'FALSE'], ['0', '0', '0', '0', '1', '0', '0.2', '0.2', '0', '0', 'Feb', '4', '1', '9', '3', 'Returning_Visitor', 'FALSE', 'FALSE'], ['0', '0', '0', '0', '2', '2.666666667', '0.05', '0.14', '0', '0', 'Feb', '3', '2', '2', '4', 'Returning_Visitor', 'FALSE', 'FALSE'], ['0', '0', '0', '0', '10', '627.5', '0.02', '0.05', '0', '0', 'Feb', '3', '3', '1', '4', 'Returning_Visitor', 'TRUE', 'FALSE']]
     """
-    raise NotImplementedError
+
+    del data[0] #Eliminate header
+
+    evidence = []
+    labels = []
+
+    for row in data:
+
+        label_raw = row.pop()
+        if label_raw == 'TRUE':
+            label = int(1)
+        elif label_raw == 'FALSE': 
+            label = int(0)
+        labels.append(label)
+
+        n = len(row)
+        evidence_row = []
+        for i in range(n):
+
+            
+            if i==0 or i==2 or i==4 or i==11 or i==12 or i==13 or i==14:
+                value = int(row[i])
+
+            elif i==1 or i==3 or i==5 or i==6 or i==7 or i==8 or i==9:
+                value = float(row[i])
+
+            elif i==10:
+                if row[i] == 'Jan':
+                    value = int(0)
+                if row[i] == 'Feb':
+                    value = int(1)
+                if row[i] == 'Mar':
+                    value = int(2)
+                if row[i] == 'Apr':
+                    value = int(3)     
+                if row[i] == 'May':
+                    value = int(4)
+                if row[i] == 'June':
+                    value = int(5)
+                if row[i] == 'Jul':
+                    value = int(6)
+                if row[i] == 'Aug':
+                    value = int(7)  
+                if row[i] == 'Sep':
+                    value = int(8)
+                if row[i] == 'Oct':
+                    value = int(9)
+                if row[i] == 'Nov':
+                    value = int(10)
+                if row[i] == 'Dec':
+                    value = int(11)
+
+            elif i==15:   
+                if row[i] == 'Returning_Visitor':
+                    value = int(1)
+                else:
+                    value = int(0)  
+
+            elif i==16:   
+                if row[i] == 'TRUE':  
+                    value = int(1)   
+                else:
+                    value = int(0)   
+
+            evidence_row.append(value)  
+
+        evidence.append(evidence_row) 
+
+    return (evidence,labels)    
 
 
 def train_model(evidence, labels):
