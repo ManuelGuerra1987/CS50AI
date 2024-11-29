@@ -58,7 +58,19 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    raise NotImplementedError
+    images = []
+    labels = []
+    
+    for directory in os.listdir(data_dir):
+       
+        print(f"Loading files...{directory}")
+        for file in os.listdir(os.path.join(data_dir, directory)):
+            image = cv2.imread(os.path.join(data_dir, directory, file))
+            image_resized = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
+            images.append(image_resized)
+            labels.append(int(directory))
+    print(f"Ended loading files")
+    return images, labels
 
 
 def get_model():
